@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     tools {
-        
         jdk 'JDK-17'
         gradle 'Gradle9'
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -22,8 +22,12 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-               withSonarQubeEnv('SonarQube') {
-                    bat 'gradlew.bat sonarqube'
+                withSonarQubeEnv('SonarQube') {
+                    withCredentials([
+                        string(credentialsId: 'sonar-token-authentication', variable: 'SONAR_TOKEN')
+                    ]) {
+                        bat 'gradlew.bat sonarqube -Dsonar.login=%SONAR_TOKEN%'
+                    }
                 }
             }
         }
@@ -37,3 +41,4 @@ pipeline {
         }
     }
 }
+

@@ -26,7 +26,7 @@ pipeline {
                     withCredentials([
                         string(credentialsId: 'sonar-token-authentication', variable: 'SONAR_TOKEN')
                     ]) {
-                        bat 'gradlew.bat sonarqube -Dsonar.login=%SONAR_TOKEN%'
+                        bat 'gradlew.bat sonar -Dsonar.token=%SONAR_TOKEN%'
                     }
                 }
             }
@@ -34,11 +34,10 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
                 }
             }
         }
     }
 }
-

@@ -29,7 +29,7 @@ pipeline {
                         string(credentialsId: 'sonar-token-authentication', variable: 'SONAR_TOKEN')
                     ]) {
                         // Run SonarQube Gradle task with proper server URL and token
-                        bat "gradlew.bat sonarqube -Dsonar.host.url=http://localhost:9000 -Dsonar.token=%SONAR_TOKEN% -Dsonar.gradle.skipCompile=true -Dsonar.projectKey=shape"
+                        bat "gradlew.bat sonarqube -Dsonar.host.url=http://192.168.1.3:9000 -Dsonar.token=%SONAR_TOKEN% -Dsonar.gradle.skipCompile=true -Dsonar.projectKey=shape"
                     }
                 }
             }
@@ -57,3 +57,4 @@ pipeline {
         }
     }
 }
+

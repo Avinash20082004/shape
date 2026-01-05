@@ -28,8 +28,8 @@ pipeline {
                     withCredentials([
                         string(credentialsId: 'sonar-token-authentication', variable: 'SONAR_TOKEN')
                     ]) {
-                        // Run the correct SonarQube Gradle task with your token
-                        bat "gradlew.bat sonarqube -Dsonar.token=%SONAR_TOKEN% -Dsonar.gradle.skipCompile=true -Dsonar.projectKey=shape"
+                        // Run SonarQube Gradle task with proper server URL and token
+                        bat "gradlew.bat sonarqube -Dsonar.host.url=http://localhost:9000 -Dsonar.token=%SONAR_TOKEN% -Dsonar.gradle.skipCompile=true -Dsonar.projectKey=shape"
                     }
                 }
             }

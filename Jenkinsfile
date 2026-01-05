@@ -10,14 +10,13 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                // Checkout the source code from SCM
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                // Build the project
+                // Clean and build your Spring Boot project
                 bat 'gradlew.bat clean bootJar'
             }
         }
@@ -26,12 +25,11 @@ pipeline {
             steps {
                 // Inject SonarQube environment variables
                 withSonarQubeEnv('SonarQube') {
-                    // Use token securely from Jenkins credentials
                     withCredentials([
                         string(credentialsId: 'sonar-token-authentication', variable: 'SONAR_TOKEN')
                     ]) {
-                        // Run Sonar analysis
-                        bat 'gradlew.bat sonar -Dsonar.token=%SONAR_TOKEN% -Dsonar.gradle.skipCompile=true'
+                        // Run the correct SonarQube Gradle task with your token
+                        bat "gradlew.bat sonarqube -Dsonar.token=%SONAR_TOKEN% -Dsonar.gradle.skipCompile=true -Dsonar.projectKey=shape"
                     }
                 }
             }
@@ -40,8 +38,8 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 // Wait for SonarQube Quality Gate result
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
+                timeout(time: 30, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -49,13 +47,13 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline finished.'
+            echo "Pipeline finished."
         }
         success {
-            echo 'Build and analysis completed successfully!'
+            echo "Pipeline succeeded!"
         }
         failure {
-            echo 'Pipeline failed. Check logs!'
+            echo "Pipeline failed!"
         }
     }
 }

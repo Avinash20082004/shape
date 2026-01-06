@@ -29,7 +29,7 @@ pipeline {
                         bat '''
                         gradlew.bat sonar ^
                          -Dsonar.projectKey=shape ^
-                         -Dsonar.host.url=http://localhost:9000 ^
+                         -Dsonar.host.url=http://192.168.1.3:9000 ^
                          -Dsonar.token=%SONAR_TOKEN% ^
                          -Dsonar.gradle.skipCompile=true
                         '''
